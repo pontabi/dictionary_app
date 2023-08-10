@@ -1,65 +1,64 @@
-<script></script>
-
 <template>
   <div class="search-box">
-    <button class="btn-search"></button>
-    <input type="text" class="input-search" placeholder="English Word.." />
+    <input
+      type="text"
+      class="input-search"
+      placeholder="English Word.."
+      v-model="inputWord"
+      @keyup.enter="fetchData(inputWord)"
+    />
   </div>
 </template>
+
+<script>
+import axios from "axios";
+const DICTIONARY_API_ENDPOINT =
+  "https://api.dictionaryapi.dev/api/v2/entries/en/";
+export default {
+  data() {
+    return {
+      inputWord: "",
+    };
+  },
+  methods: {
+    async fetchData(word) {
+      try {
+        const response = await axios.get(DICTIONARY_API_ENDPOINT + word);
+        this.$emit("get-data-from-search", response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    },
+  },
+};
+</script>
 
 <style>
 .search-box {
   width: fit-content;
   height: fit-content;
-  position: relative;
 }
 .input-search {
   height: 50px;
-  width: 50px;
-  border-style: none;
+  width: 300px;
   padding: 10px;
-  font-size: 18px;
-  letter-spacing: 2px;
-  outline: none;
-  border-radius: 25px;
-  transition: all 0.5s ease-in-out;
-  background-color: #22a6b3;
   padding-right: 40px;
+  border-style: none;
+  box-shadow: 0 1px 4px rgba(200, 200, 200, 0.26);
+  outline: none;
   color: #fff;
+  background-color: transparent;
+  font-size: 18px;
+  letter-spacing: 1px;
 }
 .input-search::placeholder {
   color: rgba(255, 255, 255, 0.5);
   font-size: 18px;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   font-weight: 100;
 }
-.btn-search {
-  width: 50px;
-  height: 50px;
-  border-style: none;
-  font-size: 20px;
-  font-weight: bold;
-  outline: none;
-  cursor: pointer;
-  border-radius: 50%;
-  position: absolute;
-  right: 0px;
-  color: #ffffff;
-  background-color: transparent;
-  pointer-events: painted;
-}
-.btn-search:focus ~ .input-search {
-  width: 300px;
-  border-radius: 0px;
-  background-color: transparent;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-  transition: all 500ms cubic-bezier(0, 0.11, 0.35, 2);
-}
+
 .input-search:focus {
-  width: 300px;
-  border-radius: 0px;
-  background-color: transparent;
   border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-  transition: all 500ms cubic-bezier(0, 0.11, 0.35, 2);
 }
 </style>
